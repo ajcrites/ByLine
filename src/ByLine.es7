@@ -1,0 +1,38 @@
+import {Transform} from "stream";
+import "babel/polyfill";
+
+export default class ByLine extends Transform {
+    constructor({lines = 1, timeout = 1000, ...opt}) {
+        super(opt);
+
+        this.lineCount = lines;
+        this.timeout = timeout;
+        this.lines = [];
+    }
+
+    async _transform(chunk, encoding, done) {
+        let line = "";
+
+        for (let chr of chunk) {
+            line += String.fromCharCode(chr);
+            if (10 === chr) {
+                this.lines.push(line);
+                line = "";
+
+                await this.emitLines();
+                this.resume();
+            }
+        }
+        done();
+    }
+
+    emitLines() {
+        if (this.lines.length == this.lineCount) {
+            this.lines.map(line => this.push(line));
+            this.lines = [];
+            this.pause();
+            return new Promise(resolve => setTimeout(resolve, this.timeout));
+        }
+        return Promise.resolve();
+    }
+}
