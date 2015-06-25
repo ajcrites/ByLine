@@ -1,0 +1,16 @@
+/**
+ * Use highland to filter only lines that start with an I, uppercase them,
+ * and then print them out each sencond
+ */
+
+import _ from "highland";
+import {createReadStream} from "fs";
+import ByLine from "../src/ByLine.js";
+
+// ByLine with no timeout splits the file into lines so our filter works per-line
+_(createReadStream(__dirname + "/text").pipe(new ByLine({timeout: 0})))
+.filter(line => /^I/.test(line))
+.map(chunk => chunk.toString().toUpperCase())
+.pipe(new ByLine({
+    encoding: "utf-8",
+})).pipe(process.stdout);

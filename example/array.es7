@@ -1,3 +1,9 @@
+/**
+ * Use highland.js to transform an array into a stream of lines
+ *
+ * Print each element out every second
+ */
+
 import _ from "highland";
 import ByLine from "../src/ByLine.js";
 

@@ -1,12 +1,15 @@
 import {Transform} from "stream";
+// Required for async/await
 import "babel/polyfill";
 
 export default class ByLine extends Transform {
+    // Default to emit 1 line each second
     constructor({lines = 1, timeout = 1000, ...opt}) {
         super(opt);
 
         this.lineCount = lines;
         this.timeout = timeout;
+        // Keep track of recorded lines to emit
         this.lines = [];
     }
 
@@ -15,11 +18,16 @@ export default class ByLine extends Transform {
 
         for (let chr of chunk) {
             line += String.fromCharCode(chr);
+            // Newline spotted!
             if (10 === chr) {
+                // Add this line to our list of lines
                 this.lines.push(line);
+                // Reset the current line
                 line = "";
 
+                // Emit buffered lines
                 await this.emitLines();
+                // Resume the stream
                 this.resume();
             }
         }
@@ -27,12 +35,18 @@ export default class ByLine extends Transform {
     }
 
     emitLines() {
+        // We are ready to print -- we have enough lines
         if (this.lines.length == this.lineCount) {
+            // Emit each line
             this.lines.map(line => this.push(line));
+            // Reset the group of lines
             this.lines = [];
+            // Pause the stream -- no need for input while we're waiting
             this.pause();
+            // Wait to resume emission based on timer settings
             return new Promise(resolve => setTimeout(resolve, this.timeout));
         }
+        // We're not ready to emit yet, so just keep reading
         return Promise.resolve();
     }
 }

@@ -1,3 +1,7 @@
+/**
+ * Read a file and print out 3 lines every 3 seconds
+ */
+
 import {createReadStream} from "fs";
 import ByLine from "../src/ByLine.js";
 
