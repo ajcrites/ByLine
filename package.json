@@ -13,6 +13,8 @@
     "gulp": "^3.9.0",
     "gulp-babel": "^5.1.0",
     "gulp-rename": "^1.2.2",
-    "highland": "^2.5.1"
+    "highland": "^2.5.1",
+    "rx": "^2.5.3",
+    "rx-node": "^1.0.1"
   }
 }

@@ -1,0 +1,16 @@
+import RxNode from "rx-node";
+import {createReadStream, createWriteStream} from "fs";
+import ByLine from "../src/ByLine.js";
+
+let outStream = new ByLine({
+    encoding: "utf-8"
+});
+
+RxNode
+    .fromReadableStream(
+        createReadStream(__dirname + "/text").pipe(new ByLine({timeout: 0}))
+    )
+    .filter(line => /^I/.test(line))
+    .map(chunk => chunk.toString().toUpperCase())
+    .pipe(new ByLine)
+    .pipe(process.stdout);

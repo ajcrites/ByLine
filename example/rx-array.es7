@@ -1,0 +1,12 @@
+import Rx from "rx/dist/rx.all";
+import {createReadStream, createWriteStream} from "fs";
+import ByLine from "../src/ByLine.js";
+
+let outStream = new ByLine({
+    encoding: "utf-8"
+});
+Rx.Observable
+    .of(1, 2, 3, 4)
+    .map(x => x + "\n")
+    .pipe(outStream)
+    .pipe(process.stdout);

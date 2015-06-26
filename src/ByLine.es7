@@ -4,7 +4,7 @@ import "babel/polyfill";
 
 export default class ByLine extends Transform {
     // Default to emit 1 line each second
-    constructor({lines = 1, timeout = 1000, ...opt}) {
+    constructor({lines = 1, timeout = 1000, ...opt} = {}) {
         super(opt);
 
         this.lineCount = lines;
