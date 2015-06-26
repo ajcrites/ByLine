@@ -3,7 +3,7 @@
  */
 
 import {createReadStream} from "fs";
-import ByLine from "../src/ByLine.js";
+import ByLine from "../src/ByLine";
 
 createReadStream(__dirname + "/text").pipe(new ByLine({
     encoding: "utf-8",

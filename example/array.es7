@@ -5,7 +5,7 @@
  */
 
 import _ from "highland";
-import ByLine from "../src/ByLine.js";
+import ByLine from "../src/ByLine";
 
 _([1, 2, 3, 4]).map(x => x + "\n").pipe(new ByLine({
     encoding: "utf-8",

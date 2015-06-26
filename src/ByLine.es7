@@ -37,6 +37,7 @@ export default class ByLine extends Transform {
     emitLines() {
         // We are ready to print -- we have enough lines
         if (this.lines.length == this.lineCount) {
+            this.emit("line");
             // Emit each line
             this.lines.map(line => this.push(line));
             // Reset the group of lines

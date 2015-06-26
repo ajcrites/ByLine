@@ -1,0 +1,32 @@
+import ByLine from "../src/ByLine";
+import sinon from "sinon";
+import chai from "chai";
+import {ReadableStream, WritableStream} from "memory-streams";
+
+let clock = sinon.useFakeTimers();
+let expect = chai.expect;
+
+describe(`ByLine`, () => {
+    it(`emits one line per second by default`, done => {
+        let readableStream = new ReadableStream("1\n2\n3\n4\n");
+        let byLine = new ByLine;
+        let writableStream = new WritableStream;
+        let count = 0;
+
+        readableStream.pipe(byLine).pipe(writableStream);
+
+        byLine.on("line", () => {
+            count++
+            if (count < 3) {
+                // ByLine internal timeout is set in the same event loop but
+                // *after* the `line` event is emitted, so wait until the
+                // next event loop to progress the timer
+                process.nextTick(() => clock.tick(1000));
+            }
+            else {
+                expect(writableStream.toString()).to.equal("1\n2\n");
+                done();
+            }
+        });
+    });
+});

@@ -1,6 +1,6 @@
 import Rx from "rx/dist/rx.all";
 import {createReadStream, createWriteStream} from "fs";
-import ByLine from "../src/ByLine.js";
+import ByLine from "../src/ByLine";
 
 let outStream = new ByLine({
     encoding: "utf-8"
